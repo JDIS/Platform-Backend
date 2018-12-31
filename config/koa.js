@@ -12,9 +12,7 @@ module.exports = function (app, passport) {
   app.keys = config.app.keys;
 
   app.proxy = config.app.proxy || false;
-  if (config.app.env === 'development') {
-    app.use(logger());
-  }
+  app.use(logger());
 
   app.use(errorHandler({
     template: config.app.root + '/src/views/error.html'

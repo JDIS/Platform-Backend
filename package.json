@@ -8,8 +8,8 @@
     "url": "https://github.com/JDIS/CSGamesSelection.git"
   },
   "scripts": {
-    "start": "NODE_ENV=production node server.js",
-    "debug": "NODE_ENV=production nodemon server.js",
+    "start": "node server.js",
+    "debug": "nodemon server.js",
     "test": "echo \"No tests\""
   },
   "license": "MIT",

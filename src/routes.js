@@ -1,11 +1,13 @@
 const Router = require('koa-router');
 
-const userController = require('../src/controllers/user');
-const authController = require('../src/controllers/auth');
-const challengeController = require('../src/controllers/challenge');
-const codeController = require('../src/controllers/code');
-const languageController = require('../src/controllers/language');
 const accessRights = require('../lib/access-rights');
+const config = require('../config/config');
+
+const userController = require('./controllers/user');
+const authController = require('./controllers/auth');
+const challengeController = require('./controllers/challenge');
+const codeController = require('./controllers/code');
+const languageController = require('./controllers/language');
 
 module.exports = function (app, passport) {
   // TODO: move elsewhere
@@ -26,7 +28,7 @@ module.exports = function (app, passport) {
   // public routes
   router.get('/auth/cas', passport.authenticate('cas'));
   router.all('/auth/cas/callback', passport.authenticate('cas', {
-    successRedirect: '/',
+    successRedirect: config.app.env === 'dev' ? 'http://localhost:8080/' : '/',
     failureRedirect: '/a/login?error=cas'
   }));
   router.post('/signout', authController.signOut);

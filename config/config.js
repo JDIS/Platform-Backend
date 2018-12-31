@@ -2,7 +2,7 @@ const path = require('path');
 
 const _ = require('lodash');
 
-const env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 const base = {
   app: {
@@ -12,7 +12,7 @@ const base = {
 };
 
 const specific = {
-  development: {
+  dev: {
     app: {
       port: 3000,
       name: 'Selection CS GAMES - Dev',
@@ -33,7 +33,7 @@ const specific = {
       url: 'mongodb://localhost/csgamesplatform_test'
     }
   },
-  production: {
+  prod: {
     app: {
       port: process.env.PORT || 3000,
       name: 'Selection CS GAMES',
