@@ -6,6 +6,7 @@ const logger = require('koa-logger');
 const compress = require('koa-compress');
 const errorHandler = require('koa-json-error');
 const bodyParser = require('koa-bodyparser');
+const redisStore = require('koa-redis');
 
 const config = require('./config');
 
@@ -27,7 +28,11 @@ module.exports = function (app, passport) {
   }));
 
   // Session management
-  app.use(session(app));
+  app.use(session({
+    store: redisStore({
+      url: config.redis.url
+    })
+  }, app));
   app.use(bodyParser());
   app.use(passport.initialize());
   app.use(passport.session());

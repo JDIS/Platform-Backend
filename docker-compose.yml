@@ -12,6 +12,10 @@ services:
       - 27017:27017
     volumes:
       - ./data/db:/data/db
+  cache:
+    image: redis
+    ports:
+      - 6379:6379
   server:
     build: ./
     command: npm start
@@ -26,6 +30,7 @@ services:
     depends_on:
       - database
       - proxy
+      - cache
   python-env:
     image: python:2.7.14
   python3-env:
