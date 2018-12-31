@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% set sitename="Sélection CS Games 2018" %}
+<html>
+<head>
+  <title>{% block title %}{{sitename}}{% endblock %}</title>
+  {% block meta %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% endblock %}
+  {% block css %}
+    {% if STYLE_URL %}
+      <link rel="stylesheet" href="/{{STYLE_URL}}">
+    {% endif %}
+  {% endblock %}
+</head>
+<body>
+<div id="page-container">{{render|raw}}</div>
+{% block script %}
+  <script type="text/javascript">
+   window.DATA = {{DATA|raw}};
+  </script>
+  {% if SCRIPT_URL_COMMON %}
+    <script type="text/javascript" src="/{{SCRIPT_URL_COMMON}}"></script>
+  {% endif %}
+  <script type="text/javascript" src="/{{SCRIPT_URL_APP}}"></script>
+{% endblock %}
+</body>
+</html>

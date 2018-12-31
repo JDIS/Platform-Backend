@@ -1,0 +1,50 @@
+version: "3"
+services:
+  proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro 
+  database:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+  server:
+    build: ./
+    command: npm start
+    ports:
+     - 3000:3000
+    volumes:
+      - ./:/usr/src
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - HOST_PWD=${PWD}
+      - VIRTUAL_HOST=jdis-ia.dinf.usherbrooke.ca,localhost
+    depends_on:
+      - database
+      - proxy
+  python-env:
+    image: python:2.7.14
+  python3-env:
+    image: python:3.6.4
+  node-env:
+    image: node:9.3.0
+  ruby-env:
+    image: ruby:2.5.0
+  sage-env:
+    image: sagemath/sagemath
+  cpp-compiler:
+    build: ./src/challenges/tests/compilation/cpp
+    image: cpp-compiler
+  csharp-compiler:
+    build: ./src/challenges/tests/compilation/csharp
+    image: csharp-compiler
+  java-compiler:
+    build: ./src/challenges/tests/compilation/java
+    image: java-compiler
+  rust-compiler:
+    build: ./src/challenges/tests/compilation/rust
+    image: rust-compiler
