@@ -22,6 +22,7 @@
     "koa-bodyparser": "4.2.x",
     "koa-compress": "3.0.x",
     "koa-error": "3.2.x",
+    "koa-json-error": "^3.1.2",
     "koa-logger": "3.2.x",
     "koa-passport": "4.1.x",
     "koa-response-time": "2.1.x",
