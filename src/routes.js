@@ -9,6 +9,8 @@ const challengeController = require('./controllers/challenge');
 const codeController = require('./controllers/code');
 const languageController = require('./controllers/language');
 
+const API_PREFIX = '/api';
+
 module.exports = function (app, passport) {
   // TODO: move elsewhere
   languageController.init()
@@ -16,9 +18,9 @@ module.exports = function (app, passport) {
     .then(codeController.init);
 
   // register routers
-  const router = new Router();
-  const securedRouter = new Router();
-  const adminRouter = new Router();
+  const router = new Router({ prefix: API_PREFIX });
+  const securedRouter = new Router({ prefix: API_PREFIX });
+  const adminRouter = new Router({ prefix: API_PREFIX });
 
   app.use(securedRouter.routes());
   app.use(adminRouter.routes());
@@ -28,7 +30,7 @@ module.exports = function (app, passport) {
   // public routes
   router.get('/auth/cas', passport.authenticate('cas'));
   router.all('/auth/cas/callback', passport.authenticate('cas', {
-    successRedirect: config.app.env === 'dev' ? 'http://localhost:8080/' : '/',
+    successRedirect: '/',
     failureRedirect: '/a/login?error=cas'
   }));
   router.post('/signout', authController.signOut);

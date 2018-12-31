@@ -21,7 +21,7 @@ module.exports = function (passport) {
   passport.deserializeUser(deserialize);
   passport.use(new CASStrategy({
     baseUrl: 'https://cas.usherbrooke.ca',
-    callbackUrl: '/auth/cas/callback',
+    callbackUrl: '/api/auth/cas/callback',
     extract: authenticator.extractCASProfile
   },
   authenticator.CASUser
