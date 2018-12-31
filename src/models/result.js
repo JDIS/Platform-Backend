@@ -31,4 +31,4 @@ ResultSchema.statics.save = function (result) {
   return this.update({ cip: result.cip, challenge: result.challenge }, result, { upsert: true });
 };
 
-mongoose.model('Result', ResultSchema);
+module.exports = mongoose.model('Result', ResultSchema);

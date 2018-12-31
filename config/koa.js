@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const cors = require('kcors');
+const cors = require('@koa/cors');
 const session = require('koa-session');
 const responseTime = require('koa-response-time');
 const logger = require('koa-logger');

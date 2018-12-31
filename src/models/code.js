@@ -25,4 +25,4 @@ CodeSchema.statics.getChallenge = function (cip, challenge) {
   return this.find({ cip, challenge });
 };
 
-mongoose.model('Code', CodeSchema);
+module.exports = mongoose.model('Code', CodeSchema);
