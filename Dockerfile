@@ -3,10 +3,10 @@ FROM node:10.15.0
 WORKDIR /usr/src
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY . .
-
+WORKDIR /app
+COPY package.json /app
 RUN npm install
-RUN npm run build
+COPY . /app
 
 EXPOSE 3000
 ENV NODE_ENV production
