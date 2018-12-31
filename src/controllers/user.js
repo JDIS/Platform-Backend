@@ -1,17 +1,17 @@
-var User = require("mongoose").model("User");
-var Result = require("mongoose").model("Result");
+const User = require('mongoose').model('User');
+const Result = require('mongoose').model('Result');
 
 exports.readAll = async function (ctx) {
-  let result = [];
-  var users = await User.find({}).sort("-meta.isAdmin data.cip").exec();
-  let usersObj = {};
-  for (let user of users) {
+  const result = [];
+  const users = await User.find({}).sort('-meta.isAdmin data.cip').exec();
+  const usersObj = {};
+  for (const user of users) {
     usersObj[user.data.cip] = user;
   }
 
-  let points = await Result.getUsersPoints().exec();
-  for (let point of points) {
-    if(usersObj[point._id]) {
+  const points = await Result.getUsersPoints().exec();
+  for (const point of points) {
+    if (usersObj[point._id]) {
       usersObj[point._id].data.totalPoints = point.points;
       result.push(usersObj[point._id]);
     }
@@ -22,9 +22,9 @@ exports.readAll = async function (ctx) {
 
 exports.makeAdmin = async function (ctx) {
   const { id } = ctx.params;
-  let user = await User.findById(id).exec();
+  const user = await User.findById(id).exec();
   if (!user) {
-    ctx.throw("L'usager n'existe pas", 404);
+    ctx.throw(404, 'user-not-exist');
   }
   user.meta.isAdmin = true;
   await user.save();

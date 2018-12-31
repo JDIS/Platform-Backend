@@ -1,6 +1,3 @@
-"use strict";
-var passport = require("koa-passport");
-
 exports.getCurrentUser = function (ctx) {
   if (ctx.state.user) {
     ctx.body = { user: ctx.state.user };
