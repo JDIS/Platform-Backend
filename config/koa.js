@@ -1,3 +1,4 @@
+const cors = require('kcors');
 const session = require('koa-session');
 const responseTime = require('koa-response-time');
 const logger = require('koa-logger');
@@ -12,7 +13,10 @@ module.exports = function (app, passport) {
   app.keys = config.app.keys;
 
   app.proxy = config.app.proxy || false;
-  app.use(logger());
+  if (config.app.env === 'dev') {
+    app.use(logger());
+    app.use(cors());
+  }
 
   app.use(errorHandler({
     template: config.app.root + '/src/views/error.html'
