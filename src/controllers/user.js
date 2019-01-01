@@ -1,15 +1,15 @@
 const User = require('mongoose').model('User');
 const Result = require('mongoose').model('Result');
 
-exports.readAll = async function (ctx) {
+const readAll = async function (ctx) {
   const result = [];
-  const users = await User.find({}).sort('-meta.isAdmin data.cip').exec();
+  const users = await User.find({}).sort('-meta.isAdmin data.cip');
   const usersObj = {};
   for (const user of users) {
     usersObj[user.data.cip] = user;
   }
 
-  const points = await Result.getUsersPoints().exec();
+  const points = await Result.getUsersPoints();
   for (const point of points) {
     if (usersObj[point._id]) {
       usersObj[point._id].data.totalPoints = point.points;
@@ -20,9 +20,9 @@ exports.readAll = async function (ctx) {
   ctx.body = { users: result };
 };
 
-exports.makeAdmin = async function (ctx) {
+const makeAdmin = async function (ctx) {
   const { id } = ctx.params;
-  const user = await User.findById(id).exec();
+  const user = await User.findById(id);
   if (!user) {
     ctx.throw(404, 'user-not-exist');
   }
@@ -30,4 +30,9 @@ exports.makeAdmin = async function (ctx) {
   await user.save();
 
   ctx.body = { user };
+};
+
+module.exports = {
+  readAll,
+  makeAdmin
 };

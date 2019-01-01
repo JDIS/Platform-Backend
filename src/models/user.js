@@ -7,17 +7,7 @@ const UserSchema = new Schema({
     cip: { type: String, required: true, unique: true, lowercase: true, match: /^[a-z]{4}\d{4}$/ },
     language: { type: String },
     email: { type: String, lowercase: true },
-    name: { type: String },
-    concentration: { type: Number },
-    promocard: {
-      price: { type: Number },
-      date: { type: Date }
-    },
-    totalPoints: { type: Number },
-    points: [{
-      reason: { type: String, required: true },
-      points: { type: Number }
-    }]
+    name: { type: String }
   },
   meta: {
     provider: { type: String },
@@ -46,45 +36,40 @@ UserSchema.virtual('meta.created').get(function () {
   return this._id.getTimestamp();
 });
 
-UserSchema.methods.awardPoints = function (giver, points, rawReason) {
-  // Get current date
-  const date = (new Date().toISOString().split('T'))[0];
-  // @TODO export that to a module, so we can test the format
-  const reason = date + ': ' + giver + ' -- ' + rawReason;
-
-  this.data.points = this.data.points || [];
-  this.data.points.push({
-    points,
-    reason
-  });
-};
-
 UserSchema.statics.findByCip = function (cip) {
   return this.findOne({ 'data.cip': cip.toLowerCase() });
 };
 
 UserSchema.statics.findOrCreateUser = async function (profile, casRes) {
-  let user = await this.findOne({ 'data.cip': profile.id }).exec();
+  let user = await this.findOne({ 'data.cip': profile.id });
 
   if (!user) {
-    user = new this({ data: { cip: profile.id } });
+    user = new this({
+      data: {
+        cip: profile.id
+      },
+      meta: {
+        provider: profile.provider
+      }
+    });
+
+    // first user should be admin
+    if (await this.count() === 0) {
+      user.meta.isAdmin = true;
+    }
+
+    // fill optional fields
+    if (profile.emails) {
+      user.data.email = profile.emails[0].value;
+    }
+    if (profile.displayName) {
+      user.data.name = profile.displayName;
+    }
+
+    await user.save();
   }
-
-  fillInfosFromCAS(profile, user);
-
-  user.meta.provider = profile.provider;
-  await user.save();
 
   return user;
 };
-
-function fillInfosFromCAS(profile, user) {
-  if (!profile.emails) {
-    // We dont have informations
-    return;
-  }
-  user.data.email = profile.emails[0].value;
-  user.data.name = profile.displayName;
-}
 
 module.exports = mongoose.model('User', UserSchema);

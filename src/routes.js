@@ -1,7 +1,6 @@
 const Router = require('koa-router');
 
 const accessRights = require('../lib/access-rights');
-const config = require('../config/config');
 
 const userController = require('./controllers/user');
 const authController = require('./controllers/auth');
