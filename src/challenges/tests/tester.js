@@ -1,5 +1,7 @@
 const os = require('os');
 
+const logger = require('winston');
+
 const { genId, execFileAsync, head } = require('../../utils');
 
 class Tester {
@@ -87,12 +89,11 @@ class Tester {
       throw { results, percent: 0 };
     };
     const log = (res) => {
-      // disable-eslint
-      console.log(this.filename);
-      console.log('-----------COMPILATION-------------');
-      console.log(`stdout: ${res.stdout}`);
-      console.log(`stderr: ${res.stderr}`);
-      console.log('-----------------------------------');
+      logger.debug(this.filename);
+      logger.debug('-----------COMPILATION-------------');
+      logger.debug(`stdout: ${res.stdout}`);
+      logger.debug(`stderr: ${res.stderr}`);
+      logger.debug('-----------------------------------');
     };
     return execFileAsync('docker', args, { timeout: 5000 }).then((res) => {
       log(res);
@@ -129,11 +130,11 @@ class Tester {
     return Promise.all(promises).then((resList) => {
       let successCount = 0;
       const results = resList.map(([res, test]) => {
-        console.log(this.filename);
-        console.log('-----------------------------------');
-        console.log(`stdout: ${head(res.stdout.trim())}`);
-        console.log(`stderr: ${head(res.stderr.trim())}`);
-        console.log('-----------------------------------');
+        logger.debug(this.filename);
+        logger.debug('-----------------------------------');
+        logger.debug(`stdout: ${head(res.stdout.trim())}`);
+        logger.debug(`stderr: ${head(res.stderr.trim())}`);
+        logger.debug('-----------------------------------');
         const isSuccess = this.verifyOutput(res.stdout.replace(/\r/g, '').replace(/\n$/, '').split('\n'), test.outputs);
         const isTimeout = res.killed;
         if (isSuccess) { successCount++; }
@@ -150,8 +151,7 @@ class Tester {
     if (this.compImageName) { args.push(this.compImageName); }
     if (args.length !== args.lenInit) {
       execFileAsync('docker', args, { timeout: 5000 }).catch((e) => {
-        console.log('[!] Unable to terminate container');
-        console.log(e);
+        logger.debug('[!] Unable to terminate container', e);
       });
     }
 

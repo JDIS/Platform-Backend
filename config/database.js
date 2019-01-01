@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+const logger = require('winston');
 const mongoose = require('mongoose');
 
 module.exports = function (config) {
@@ -8,8 +9,7 @@ module.exports = function (config) {
   mongoose.connect(config.mongo.url, { useNewUrlParser: true, useCreateIndex: true });
 
   mongoose.connection.on('error', function (err) {
-    console.log('Error Mongo:');
-    console.log(err);
+    logger.error('Error Mongo:', err);
   });
 
   // TODO: remove and move to direct imports

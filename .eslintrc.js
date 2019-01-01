@@ -54,7 +54,7 @@ module.exports = {
     'no-async-promise-executor': 2,
     'no-caller': 2,
     'no-class-assign': 2,
-    //'no-console': 2,
+    'no-console': 2,
     'no-const-assign': 2,
     'no-constant-condition': 2,
     'no-debugger': 2,

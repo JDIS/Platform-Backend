@@ -1,28 +1,29 @@
-"use strict";
+/* eslint-disable no-console */
+'use strict';
 
-const fs = require("fs");
-const os = require("os");
+const fs = require('fs');
+const os = require('os');
 
 const BUFSIZ = 65536;
 let buf = new Buffer(BUFSIZ);
 buf.fill('\x00');
-let response = [""];
+let response = [''];
 try {
   fs.readSync(process.stdin.fd, buf, 0, BUFSIZ, null);
   const stopIdx = buf.indexOf(0);
-  buf = buf.slice(0,stopIdx);
-} catch(e) {
+  buf = buf.slice(0, stopIdx);
+} catch (e) {
   console.warn(e);
-  console.warn("No inputs in defi");
+  console.warn('No inputs');
   process.exit(1);
 }
 
-response = buf.toString("utf-8");
+response = buf.toString('utf-8');
 let idx__ = 0;
-let lines__ = response.split(os.EOL);
+const lines__ = response.split(os.EOL);
 
 module.exports = () => {
-    idx__++;
-    return lines__[idx__-1];
+  idx__++;
+  return lines__[idx__ - 1];
 };
 
