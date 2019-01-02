@@ -4,6 +4,7 @@ const accessRights = require('../lib/access-rights');
 
 const userController = require('./controllers/user');
 const authController = require('./controllers/auth');
+const categoryController = require('./controllers/category');
 const challengeController = require('./controllers/challenge');
 const codeController = require('./controllers/code');
 const languageController = require('./controllers/language');
@@ -48,7 +49,13 @@ module.exports = function (app, passport) {
 
   securedRouter.get('/languages', languageController.getSupported);
 
+  securedRouter.get('/categories', categoryController.getAll);
+
   // admin routes
   adminRouter.use(accessRights.isConnected, accessRights.isAdmin);
   adminRouter.post('/users/:id/makeadmin', userController.makeAdmin);
+
+  adminRouter.post('/languages/seed', languageController.seed);
+  adminRouter.post('/categories/seed', categoryController.seed);
+  adminRouter.post('/challenges/seed', challengeController.seed);
 };

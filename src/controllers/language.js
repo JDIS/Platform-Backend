@@ -2,11 +2,14 @@ const fs = require('fs');
 
 const _ = require('lodash');
 
+const Language = require('../models/language');
+const { readFileAsync } = require('../utils');
+
 const challenges = require('./challenge').list;
 
 const languages = [];
 
-exports.init = function () {
+const init = () => {
   return new Promise((complete, fail) => {
     fs.readFile(`${__dirname}/../languages.json`, (err, content) => {
       if (err) {
@@ -24,7 +27,20 @@ exports.init = function () {
   });
 };
 
-exports.getSupported = function (ctx) {
+const seed = async (ctx) => {
+  const added = [];
+  const languages = JSON.parse(await readFileAsync(`${global.__basedir}/seed/languages.json`, { encoding: 'utf8' }));
+  for (const language of languages) {
+    if (await Language.findOne({ name: language.name })) {
+      continue;
+    }
+    added.push(await Language.create(language));
+  }
+  ctx.status = 200;
+  ctx.body = added;
+};
+
+const getSupported = (ctx) => {
   if (ctx.query.challenge) {
     const idx = _.findIndex(challenges, { name: ctx.query.challenge });
     if (idx >= 0) {
@@ -49,7 +65,7 @@ exports.getSupported = function (ctx) {
   ctx.status = 200;
 };
 
-exports.aliases = function (name) {
+const aliases = (name) => {
   const alias = {
     'Python 2.7': ['python'],
     'Python 3.6': ['python'],
@@ -58,4 +74,10 @@ exports.aliases = function (name) {
   return [name].concat(alias[name]);
 };
 
-exports.supported = languages;
+module.exports = {
+  init,
+  seed,
+  getSupported,
+  aliases,
+  supported: languages
+};

@@ -1,12 +1,14 @@
-const execFile = require('child_process').execFile;
 const crypto = require('crypto');
+const execFile = require('child_process').execFile;
+const fs = require('fs');
+const promisify = require('util').promisify;
 const os = require('os');
 
-module.exports.genId = () => crypto.randomBytes(16).toString('hex');
+const genId = () => crypto.randomBytes(16).toString('hex');
 
 // util.promisify on execFile, prevents feeding data
 // to stdin, so we write our own
-const promisify = (orig) => {
+const promisifyWithData = (orig) => {
   return (...args) => {
     return new Promise((resolve, reject) => {
       const options = args[args.length - 1];
@@ -29,11 +31,17 @@ const promisify = (orig) => {
   };
 };
 
-module.exports.head = function (str, length = 1 << 12) {
+const head = (str, length = 1 << 12) => {
   if (str.length > length) {
     return str.substring(0, length) + '\n (abridged)';
   }
   return str;
 };
 
-module.exports.execFileAsync = promisify(execFile);
+module.exports = {
+  genId,
+  head,
+  execFileAsync: promisifyWithData(execFile),
+  readFileAsync: promisify(fs.readFile),
+  readdirAsync: promisify(fs.readdir)
+};

@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Python 2.7",
+    "bin": "python",
+    "fileExtension": ".py",
+    "dockerImage": "python:2.7.14",
+    "interpreter": true,
+    "highlight": "python"
+  },
+  {
+    "name": "Python 3.6",
+    "bin": "python",
+    "fileExtension": ".py",
+    "dockerImage": "python:3.6.4",
+    "interpreter": true,
+    "highlight": "python"
+  },
+  {
+    "name": "Javascript",
+    "bin": "node",
+    "fileExtension": ".js",
+    "dockerImage": "node:9.3.0",
+    "interpreter": true,
+    "highlight": "javascript"
+  },
+  {
+    "name": "Ruby",
+    "bin": "ruby",
+    "fileExtension": ".rb",
+    "dockerImage": "ruby:2.5.0",
+    "interpreter": true,
+    "highlight": "ruby"
+  },
+  {
+    "name": "SageMath",
+    "bin": "sage",
+    "fileExtension": ".sage",
+    "dockerImage": "sagemath/sagemath",
+    "interpreter": true,
+    "highlight": "python"
+  },
+  {
+    "name": "C++",
+    "fileExtension": ".cpp",
+    "dockerImage": "gcc:7.2.0",
+    "dockerCompiler": "cpp-compiler",
+    "interpreter": false,
+    "highlight": "c_cpp"
+  },
+  {
+    "name": "C#",
+    "bin": "dotnet",
+    "fileExtension": ".cs",
+    "dockerImage": "microsoft/dotnet:2.0-sdk",
+    "dockerCompiler": "csharp-compiler",
+    "compiledPostfix": "/app.dll",
+    "interpreter": false,
+    "highlight": "csharp"
+  },
+  {
+    "name": "Java 9",
+    "bin": "java",
+    "fileExtension": ".java",
+    "dockerImage": "openjdk:9.0.1-jdk",
+    "dockerCompiler": "java-compiler",
+    "compiledPostfix": "/app.jar",
+    "runPreArgs": [ "-jar" ],
+    "interpreter": false,
+    "highlight": "java"
+  },
+  {
+    "name": "Rust",
+    "fileExtension": ".rs",
+    "dockerImage": "rust:1.23.0",
+    "dockerCompiler": "rust-compiler",
+    "interpreter": false,
+    "highlight": "rust"
+  }
+]

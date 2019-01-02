@@ -8,3 +8,9 @@ The only requirement is that the `PWD` environment variable must be set to the d
 You can use `export PWD=$(pwd)` on unix-like platforms.
 
 You can then run `npm start` to launch the server in `dev` mode.
+
+## Seed
+To seed the database, an admin needs to `POST` on the following endpoints:
+- `/api/languages/seed`
+- `/api/categories/seed`
+- `/api/challenges/seed`
