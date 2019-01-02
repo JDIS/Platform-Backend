@@ -22,7 +22,8 @@ module.exports = function (app, passport) {
 
   // JSON error handler
   app.use(errorHandler({
-    postFormat: (e, obj) => process.env.NODE_ENV === 'prod' ? _.omit(obj, 'stack') : obj
+    preFormat: null,
+    postFormat: (e, obj) => process.env.NODE_ENV === 'prod' ? _.pick(obj, 'message', 'name') : obj
   }));
 
   // Session management

@@ -107,15 +107,23 @@ const seed = async (ctx) => {
       });
 
       // create the tests
-      for (const test of metadata.tests) {
-        await Test.create({
-          name: test.name,
-          challenge,
-          isCode: test.isCode,
-          inputs: test.inputs,
-          outputs: test.outputs,
-          code: test.code
-        });
+      try {
+        for (const test of metadata.tests) {
+          await Test.create({
+            name: test.name,
+            challenge,
+            isPublic: test.isPublic,
+            isCode: test.isCode,
+            inputs: test.inputs,
+            outputs: test.outputs,
+            code: test.code
+          });
+        }
+      } catch (err) {
+        // revert the whole insert
+        await Test.deleteMany({ challenge: challenge._id });
+        await Challenge.findByIdAndDelete(challenge._id);
+        throw err;
       }
 
       added.push(challenge);
@@ -124,6 +132,57 @@ const seed = async (ctx) => {
 
   ctx.status = 200;
   ctx.body = added;
+};
+
+const create = async (ctx) => {
+  const metadata = ctx.request.body;
+
+  const challenge = await Challenge.create({
+    name: metadata.name,
+    description: metadata.description,
+    points: metadata.points,
+    category: metadata.category,
+    isCodingChallenge: metadata.isCodingChallenge,
+    timeAllowed: metadata.timeAllowed,
+    languagesAllowed: metadata.languagesAllowed,
+    boilerplates: metadata.boilerplates
+  });
+
+  ctx.status = 200;
+  ctx.body = challenge;
+};
+
+const get = async (ctx) => {
+  const challenge = await Challenge.findById(ctx.params.id);
+  if (!challenge) {
+    ctx.throw(404, 'Challenge does not exists');
+  }
+  ctx.status = 200;
+  ctx.body = challenge;
+};
+
+const update = async (ctx) => {
+  const metadata = ctx.request.body;
+
+  const challenge = await Challenge.findByIdAndUpdate(ctx.params.id, {
+    name: metadata.name,
+    description: metadata.description,
+    points: metadata.points,
+    category: metadata.category,
+    isCodingChallenge: metadata.isCodingChallenge,
+    timeAllowed: metadata.timeAllowed,
+    languagesAllowed: metadata.languagesAllowed,
+    boilerplates: metadata.boilerplates
+  });
+
+  ctx.status = 200;
+  ctx.body = challenge;
+};
+
+const remove = async (ctx) => {
+  await Test.deleteMany({ challenge: ctx.params.id });
+  await Challenge.findByIdAndDelete(ctx.params.id);
+  ctx.status = 200;
 };
 
 const getAll = async function (ctx) {
@@ -168,6 +227,11 @@ module.exports = {
   getAll,
   getResult,
   getResults,
+  list: challenges,
+  // NEW API
+  create,
+  get,
+  remove,
   seed,
-  list: challenges
+  update
 };

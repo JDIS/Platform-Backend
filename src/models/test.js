@@ -11,6 +11,10 @@ const TestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Challenge'
   },
+  isPublic: {
+    type: Boolean,
+    required: true
+  },
   isCode: {
     type: Boolean,
     required: true

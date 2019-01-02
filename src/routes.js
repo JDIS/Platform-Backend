@@ -8,6 +8,7 @@ const categoryController = require('./controllers/category');
 const challengeController = require('./controllers/challenge');
 const codeController = require('./controllers/code');
 const languageController = require('./controllers/language');
+const testController = require('./controllers/test');
 
 const API_PREFIX = '/api';
 
@@ -40,6 +41,7 @@ module.exports = function (app, passport) {
   securedRouter.get('/users', userController.readAll);
   securedRouter.get('/users/me', authController.getCurrentUser);
   securedRouter.get('/challenges', challengeController.getAll);
+  securedRouter.get('/challenges/:id', challengeController.get);
   securedRouter.get('/challenges/:challenge/result', challengeController.getResult);
   securedRouter.get('/results', challengeController.getResults);
 
@@ -58,4 +60,11 @@ module.exports = function (app, passport) {
   adminRouter.post('/languages/seed', languageController.seed);
   adminRouter.post('/categories/seed', categoryController.seed);
   adminRouter.post('/challenges/seed', challengeController.seed);
+
+  adminRouter.post('/challenges', challengeController.create);
+  adminRouter.put('/challenges/:id', challengeController.update);
+  adminRouter.delete('/challenges/:id', challengeController.remove);
+  adminRouter.get('/challenges/:id/tests', testController.getAll);
+  adminRouter.post('/challenges/:id/tests', testController.createAll);
+  adminRouter.put('/challenges/:id/tests', testController.updateAll);
 };
