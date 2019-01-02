@@ -2,7 +2,6 @@ const _ = require('lodash');
 const cors = require('@koa/cors');
 const session = require('koa-session');
 const responseTime = require('koa-response-time');
-const logger = require('koa-logger');
 const compress = require('koa-compress');
 const errorHandler = require('koa-json-error');
 const bodyParser = require('koa-bodyparser');
@@ -16,7 +15,6 @@ module.exports = function (app, passport) {
 
   app.proxy = config.app.proxy || false;
   if (config.app.env === 'dev') {
-    app.use(logger());
     app.use(cors({
       credentials: true
     }));

@@ -1,13 +1,15 @@
 const koa = require('koa');
 const passport = require('koa-passport');
+const logger = require('winston');
 
 const config = require('./config/config');
-const logger = require('./config/logger');
 
 // helper to root directory
 global.__basedir = __dirname;
 
 const app = new koa();
+
+require('./config/logger')(app);
 
 require('./config/database')(config);
 
