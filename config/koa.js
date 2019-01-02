@@ -6,6 +6,8 @@ const compress = require('koa-compress');
 const errorHandler = require('koa-json-error');
 const bodyParser = require('koa-bodyparser');
 const redisStore = require('koa-redis');
+const swagger = require('swagger2');
+const { ui } = require('swagger2-koa');
 
 const config = require('./config');
 
@@ -19,6 +21,13 @@ module.exports = function (app, passport) {
       credentials: true
     }));
   }
+
+  // Swagger
+  const document = swagger.loadDocumentSync(`${global.__basedir}/swagger.yml`);
+  if (!swagger.validateDocument(document)) {
+    throw Error(`Spec does not conform to the Swagger 2.0 schema`);
+  }
+  app.use(ui(document, '/api/swagger'));
 
   // JSON error handler
   app.use(errorHandler({

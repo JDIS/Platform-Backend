@@ -1,0 +1,59 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: API for the JDIS training platform
+basePath: /api
+securityDefinitions:
+  cookieAuth:
+    type: apiKey
+    in: header
+    name: Cookie
+paths:
+  /challenges/{challengeId}:
+    get:
+      summary: Get a challenge by ID
+      parameters:
+      - in: path
+        name: challengeId
+        type: string
+        required: true
+        description: ID of the challenge to get
+      responses:
+        404:
+          description: Not found
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Challenge"
+definitions:
+  Challenge:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      name:
+        type: string
+      description:
+        type: string
+      points:
+        type: integer
+      category:
+        type: string
+      isCodingChallenge:
+        type: boolean
+      timeAllowed:
+        type: integer
+      languagesAllowed:
+        type: array
+        items:
+          type: string
+      boilerplates:
+        type: array
+        items:
+          type: object
+          properties:
+            language:
+              type: string
+            code:
+              type: string
