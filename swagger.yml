@@ -205,6 +205,25 @@ paths:
         200:
           description: OK
   # LANGUAGES
+  /languages:
+    get:
+      summary: Get supported languages
+      tags:
+        - languages
+      parameters:
+        - in: query
+          name: challenge
+          type: string
+          description: ID of the challenge
+      responses:
+        404:
+          description: Challenge not found
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Language"
   /languages/seed:
     post:
       summary: Seed the database with stored languages
@@ -363,3 +382,26 @@ definitions:
               type: boolean
             isCompilationError:
               type: boolean
+  Language:
+    type: object
+    properties:
+      name:
+        type: string
+      bin: 
+        type: string
+      fileExtension:
+        type: string
+      dockerImage:
+        type: string
+      dockerCompiler: 
+        type: string
+      compiledPostfix: 
+        type: string
+      runPreArgs:
+        type: array
+        items:
+          type: string
+      interpreter:
+        type: boolean
+      highlight:
+        type: string

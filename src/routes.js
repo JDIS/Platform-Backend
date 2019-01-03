@@ -14,11 +14,6 @@ const userController = require('./controllers/user');
 const API_PREFIX = '/api';
 
 module.exports = function (app, passport) {
-  // TODO: move elsewhere
-  languageController.init()
-    .then(challengeController.init)
-    .then(codeController.init);
-
   // register routers
   const router = new Router({ prefix: API_PREFIX });
   const securedRouter = new Router({ prefix: API_PREFIX });

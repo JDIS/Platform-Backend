@@ -1,31 +1,6 @@
-const fs = require('fs');
-
-const _ = require('lodash');
-
+const Challenge = require('../models/challenge');
 const Language = require('../models/language');
 const { readFileAsync } = require('../utils');
-
-const challenges = require('./challenge').list;
-
-const languages = [];
-
-const init = () => {
-  return new Promise((complete, fail) => {
-    fs.readFile(`${__dirname}/../languages.json`, (err, content) => {
-      if (err) {
-        fail(err);
-      }
-
-      try {
-        languages.push(...JSON.parse(content));
-      } catch (e) {
-        fail(e);
-      }
-
-      complete(languages);
-    });
-  });
-};
 
 const seed = async (ctx) => {
   const added = [];
@@ -40,44 +15,35 @@ const seed = async (ctx) => {
   ctx.body = added;
 };
 
-const getSupported = (ctx) => {
+const getSupported = async (ctx) => {
+  const languages = await Language.find({});
+
   if (ctx.query.challenge) {
-    const idx = _.findIndex(challenges, { name: ctx.query.challenge });
-    if (idx >= 0) {
-      if (challenges[idx].blacklist) {
-        const availableLanguages = languages.filter((language) => !challenges[idx].blacklist.includes(language.name));
-        ctx.body = { languages: availableLanguages };
-        ctx.status = 200;
-        return;
-      }
-      if (challenges[idx].whitelist) {
-        const availableLanguages = languages.filter((language) => challenges[idx].whitelist.includes(language.name));
-        ctx.body = { languages: availableLanguages };
-        ctx.status = 200;
-        return;
-      }
-    } else {
-      ctx.status = 400;
+    const challenge = await Challenge.findById(ctx.query.challenge);
+
+    if (!challenge) {
+      ctx.throw(400, 'Challenge does not exists');
+    }
+
+    const { blacklist, whitelist } = challenge.languagesAllowed;
+    if (blacklist.length) {
+      const availableLanguages = languages.filter((l) => !challenge.languagesAllowed.blacklist.includes(l.name));
+      ctx.body = availableLanguages;
+      ctx.status = 200;
+      return;
+    }
+    if (whitelist.length) {
+      const availableLanguages = languages.filter((l) => challenge.languagesAllowed.whitelist.includes(l.name));
+      ctx.body = { languages: availableLanguages };
+      ctx.status = 200;
       return;
     }
   }
-  ctx.body = { languages };
+  ctx.body = languages;
   ctx.status = 200;
 };
 
-const aliases = (name) => {
-  const alias = {
-    'Python 2.7': ['python'],
-    'Python 3.6': ['python'],
-    'Javascript': ['javascript'] // eslint-disable-line quote-props
-  };
-  return [name].concat(alias[name]);
-};
-
 module.exports = {
-  init,
   seed,
-  getSupported,
-  aliases,
-  supported: languages
+  getSupported
 };
