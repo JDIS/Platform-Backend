@@ -9,15 +9,20 @@ securityDefinitions:
     in: header
     name: Cookie
 paths:
-  /challenges/{challengeId}:
-    get:
-      summary: Get a challenge by ID
+  # CHALLENGES
+  /challenges:
+    post:
+      summary: Create a challenge
+      tags:
+        - challenges
+      consumes:
+        - application/json
       parameters:
-      - in: path
-        name: challengeId
-        type: string
-        required: true
-        description: ID of the challenge to get
+        - in: body
+          name: challenge
+          description: The challenge to create
+          schema:
+            $ref: "#/definitions/Challenge"
       responses:
         404:
           description: Not found
@@ -25,6 +30,192 @@ paths:
           description: OK
           schema:
             $ref: "#/definitions/Challenge"
+  /challenges/seed:
+    post:
+      summary: Seed the database with stored challenges
+      tags:
+        - seed
+      responses:
+        200:
+          description: OK
+  /challenges/{challengeId}:
+    get:
+      summary: Get a challenge by ID
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge
+      responses:
+        404:
+          description: Not found
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Challenge"
+    put:
+      summary: Update a challenge by ID
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge to update
+        - in: body
+          name: challenge
+          description: The new challenge data
+          schema:
+            $ref: "#/definitions/Challenge"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Challenge"
+    delete:
+      summary: Delete a challenge and tests by ID
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge
+      responses:
+        200:
+          description: OK
+  /challenges/{challengeId}/tests:
+    get:
+      summary: Get tests for a challenge by ID
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
+    post:
+      summary: Create tests for a challenge by ID
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge
+        - in: body
+          name: tests
+          description: The tests to create
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
+    put:
+      summary: Update tests for a challenge by ID
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge
+        - in: body
+          name: tests
+          description: The tests to update
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
+  # CATEGORIES
+  /categories:
+    get:
+      summary: Get all categories
+      tags:
+        - categories
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Category"
+  /categories/seed:
+    post:
+      summary: Seed the database with stored categories
+      tags:
+        - categories
+        - seed
+      responses:
+        200:
+          description: OK
+  # LANGUAGES
+  /languages/seed:
+    post:
+      summary: Seed the database with stored languages
+      tags:
+        - languages
+        - seed
+      responses:
+        200:
+          description: OK
+  # USERS
+  /users/me:
+    get:
+      summary: Get the current user
+      tags:
+        - users
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+  /users/:userId/makeadmin:
+    post:
+      summary: Make a user admin
+      tags:
+        - users
+      parameters:
+        - in: path
+          name: userId
+          type: string
+          required: true
+          description: ID of the user
+      responses:
+        404:
+          description: Not found
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
 definitions:
   Challenge:
     type: object
@@ -57,3 +248,52 @@ definitions:
               type: string
             code:
               type: string
+  Test:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      challenge:
+        type: string
+      isPublic:
+        type: boolean
+      isCode:
+        type: boolean
+      inputs:
+        type: array
+        items:
+          type: string
+      outputs:
+        type: array
+        items:
+          type: string
+  Category:
+    type: object
+    properties:
+      name:
+        type: string
+  User:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          cip:
+            type: string
+          language:
+            type: string
+          email:
+            type: string
+          name:
+            type: string
+      meta:
+        type: object
+        properties:
+          provider:
+            type: string
+          isAdmin:
+            type: boolean
+          created:
+            type: string

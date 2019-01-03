@@ -28,6 +28,8 @@ module.exports = function (app, passport) {
     throw Error(`Spec does not conform to the Swagger 2.0 schema`);
   }
   app.use(ui(document, '/api/swagger'));
+  // TODO: Add validate and handle errors it produces
+  // app.use(validate(document));
 
   // JSON error handler
   app.use(errorHandler({

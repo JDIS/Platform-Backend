@@ -1,4 +1,7 @@
 {
   "verbose": true,
-  "ignore": ["src/challenges/codes/*", "data/*"]
+  "ignore": ["src/challenges/codes/*", "data/*"],
+  "watch": [
+    "swagger.yml"
+  ]
 }
