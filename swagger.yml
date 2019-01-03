@@ -166,6 +166,22 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Challenge"
+  /challenges/{challengeId}/result:
+    get:
+      summary: Get result for challenge
+      tags:
+        - challenges
+      parameters:
+        - in: path
+          name: challengeId
+          type: string
+          required: true
+          description: ID of the challenge
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Challenge"
   # CATEGORIES
   /categories:
     get:
@@ -227,6 +243,19 @@ paths:
           description: OK
           schema:
             $ref: "#/definitions/User"
+  # RESULTS
+  /results:
+    get:
+      summary: Get all results
+      tags:
+        - results
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
 definitions:
   Challenge:
     type: object
@@ -308,3 +337,29 @@ definitions:
             type: boolean
           created:
             type: string
+  Result:
+    type: object
+    properties:
+      user:
+        type: string
+      challenge:
+        type: string
+      points:
+        type: number
+      percent:
+        type: number
+      tests:
+        type: array
+        items:
+          type: object
+          properties:
+            test:
+              type: string
+            percent:
+              type: number
+            isSuccess:
+              type: boolean
+            isTimeout:
+              type: boolean
+            isCompilationError:
+              type: boolean

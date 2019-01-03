@@ -2,13 +2,14 @@ const Router = require('koa-router');
 
 const accessRights = require('../lib/access-rights');
 
-const userController = require('./controllers/user');
 const authController = require('./controllers/auth');
 const categoryController = require('./controllers/category');
 const challengeController = require('./controllers/challenge');
 const codeController = require('./controllers/code');
 const languageController = require('./controllers/language');
+const resultController = require('./controllers/result');
 const testController = require('./controllers/test');
+const userController = require('./controllers/user');
 
 const API_PREFIX = '/api';
 
@@ -43,8 +44,8 @@ module.exports = function (app, passport) {
 
   securedRouter.get('/challenges', challengeController.getAll);
   securedRouter.get('/challenges/:id', challengeController.get);
-  securedRouter.get('/challenges/:challenge/result', challengeController.getResult);
-  securedRouter.get('/results', challengeController.getResults);
+  securedRouter.get('/challenges/:id/result', resultController.get);
+  securedRouter.get('/results', resultController.getAll);
 
   securedRouter.post('/codes', codeController.saveCode);
   securedRouter.post('/codes/submit', codeController.submit);
