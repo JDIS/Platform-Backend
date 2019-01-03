@@ -275,6 +275,52 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Challenge"
+  # CODES
+  /codes:
+    get:
+      summary: Get codes for challenge
+      tags:
+        - codes
+      parameters:
+        - in: query
+          name: challenge
+          type: string
+          description: ID of the challenge
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Code"
+    post:
+      summary: Save code
+      tags:
+        - codes
+      parameters:
+        - in: body
+          name: code
+          description: The code to save
+          schema:
+            $ref: "#/definitions/Code"
+      responses:
+        200:
+          description: OK
+  /codes/submit:
+    post:
+      summary: Run code
+      tags:
+          - codes
+      parameters:
+        - in: body
+          name: code
+          description: The code to run
+          schema:
+            $ref: "#/definitions/Code"
+      responses:
+          200:
+            description: OK
 definitions:
   Challenge:
     type: object
@@ -312,6 +358,7 @@ definitions:
     properties:
       id:
         type: string
+        readOnly: true
       name:
         type: string
       challenge:
@@ -336,6 +383,9 @@ definitions:
   User:
     type: object
     properties:
+      id:
+        type: string
+        readOnly: true
       data:
         type: object
         properties:
@@ -359,6 +409,9 @@ definitions:
   Result:
     type: object
     properties:
+      id:
+        type: string
+        readOnly: true
       user:
         type: string
       challenge:
@@ -385,6 +438,9 @@ definitions:
   Language:
     type: object
     properties:
+      id:
+        type: string
+        readOnly: true
       name:
         type: string
       bin: 
@@ -404,4 +460,19 @@ definitions:
       interpreter:
         type: boolean
       highlight:
+        type: string
+  Code:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+      user:
+        type: string
+        readOnly: true
+      challenge:
+        type: string
+      language:
+        type: string
+      code:
         type: string

@@ -43,5 +43,6 @@ module.exports = {
   head,
   execFileAsync: promisifyWithData(execFile),
   readFileAsync: promisify(fs.readFile),
+  writeFileAsync: promisify(fs.writeFile),
   readdirAsync: promisify(fs.readdir)
 };

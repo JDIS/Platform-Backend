@@ -42,9 +42,9 @@ module.exports = function (app, passport) {
   securedRouter.get('/challenges/:id/result', resultController.get);
   securedRouter.get('/results', resultController.getAll);
 
+  securedRouter.get('/codes', codeController.getChallengeCodes);
   securedRouter.post('/codes', codeController.saveCode);
   securedRouter.post('/codes/submit', codeController.submit);
-  securedRouter.get('/codes', codeController.getChallengeCodes);
 
   securedRouter.get('/languages', languageController.getSupported);
 

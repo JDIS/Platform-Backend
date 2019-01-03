@@ -1,88 +1,64 @@
-const fs = require('fs');
-const promisify = require('util').promisify;
-
-const _ = require('lodash');
-const Code = require('mongoose').model('Code');
-const User = require('mongoose').model('User');
-const Result = require('mongoose').model('Result');
-
+const Challenge = require('../models/challenge');
+const Code = require('../models/code');
+const Language = require('../models/language');
+const Result = require('../models/result');
+const Test = require('../models/test');
+const User = require('../models/user');
 const Tester = require('../challenges/tests/tester');
+const { writeFileAsync } = require('../utils');
 
-const languages = require('./language').supported;
+const saveCode = async (ctx) => {
+  const user = ctx.state.user.id;
+  const newCode = ctx.request.body;
+  newCode.user = user;
 
-const readFileAsync = promisify(fs.readFile);
-const writeFileAsync = promisify(fs.writeFile);
+  await User.update({ user }, { $set: { 'data.language': newCode.language } });
+  await Code.save(newCode);
 
-const _challenges = {};
-
-exports.init = function (challenges) {
-  challenges.forEach((challenge) => {
-    _challenges[challenge.name] = challenge;
-  });
+  ctx.status = 200;
 };
 
-exports.saveCode = async function (ctx) {
-  const user = ctx.state.user;
-  const code = ctx.request.body.code;
-  code.cip = user.data.cip;
-  user.data.language = code.language;
-  user.id = undefined;
-  await User.update({ cip: user.cip }, { $set: { 'data.language': code.language } });
-  const resp = await Code.save(code);
-  if (resp.ok) {
-    ctx.body = { code };
-    ctx.status = 200;
-  } else {
-    ctx.body = { error: resp };
-    ctx.status = 500;
-  }
-};
-
-exports.getChallengeCodes = async function (ctx) {
+const getChallengeCodes = async (ctx) => {
   if (!ctx.query.challenge) {
-    ctx.status = 400;
-    ctx.body = { error: 'Specify a challenge' };
+    ctx.throw(400, 'Must specify a challenge');
   }
 
-  const user = ctx.state.user;
-  const codes = await Code.getChallenge(user.data.cip, ctx.query.challenge);
-  ctx.body = { codes };
+  const user = ctx.state.user.id;
+
+  ctx.status = 200;
+  ctx.body = await Code.getChallenge(user, ctx.query.challenge);
 };
 
-exports.submit = async function (ctx) {
-  const user = ctx.state.user;
+const submit = async (ctx) => {
+  const user = ctx.state.user.id;
   const code = ctx.request.body;
-  const cip = user.data.cip;
 
   // make sure we are using an allowed language
-  if ((_challenges[code.challenge].blacklist && _challenges[code.challenge].blacklist.includes(code.language)) ||
-     (_challenges[code.challenge].whitelist && !_challenges[code.challenge].whitelist.includes(code.language))) {
-    ctx.status = 403;
-    return;
+  const challenge = await Challenge.findById(code.challenge);
+  const { blacklist, whitelist } = challenge.languagesAllowed;
+  if ((blacklist.length && blacklist.includes(code.language)) ||
+     (whitelist.length && !whitelist.includes(code.language))) {
+    ctx.throw(403, 'Language not allowed');
   }
 
   // remove current result
-  await Result.remove({ challenge: code.challenge, cip });
-
-  // update user prefered language
-  user.language = code.language;
-  await User.update({ cip: user.cip }, { $set: { 'data.language': code.language } });
+  await Result.remove({ challenge: code.challenge, user });
 
   // prepare code file
-  const language = languages[_.findIndex(languages, { name: code.language })];
-  const filename = `${cip}_${code.challenge}_${Math.floor(new Date() / 1000)}${language.fileExtension}`;
-  await writeFileAsync(`${__dirname}/../challenges/codes/${filename}`, code.code);
+  const language = await Language.findById(code.language);
+  const filename = `${user}_${code.challenge}_${Math.floor(new Date() / 1000)}${language.fileExtension}`;
+  await writeFileAsync(`${global.__basedir}/data/codes/${filename}`, code.code);
 
   // test code
+  const tests = await Test.find({ challenge: code.challenge });
   const tester = new Tester(filename, language);
-  const jsonstring = await readFileAsync(`${__dirname}/../challenges/tests/${code.challenge}.json`);
-  tester.setTest(JSON.parse(jsonstring));
+  tester.setTest(tests);
   const result = await tester.run();
 
   // save result
-  result.cip = cip;
+  result.user = user;
   result.challenge = code.challenge;
-  result.points = Math.floor(_challenges[code.challenge].points * result.percent);
+  result.points = Math.floor(challenge.points * result.percent);
   const resp = await Result.save(result);
 
   if (resp.ok) {
@@ -91,4 +67,10 @@ exports.submit = async function (ctx) {
     ctx.body = { error: resp };
     ctx.status = 500;
   }
+};
+
+module.exports = {
+  saveCode,
+  getChallengeCodes,
+  submit
 };
