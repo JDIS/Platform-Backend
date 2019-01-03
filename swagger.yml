@@ -11,6 +11,17 @@ securityDefinitions:
 paths:
   # CHALLENGES
   /challenges:
+    get:
+      summary: Get all challenges
+      tags:
+        - challenges
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Challenge"
     post:
       summary: Create a challenge
       tags:

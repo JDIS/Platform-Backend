@@ -40,6 +40,7 @@ module.exports = function (app, passport) {
   securedRouter.use(accessRights.isConnected);
   securedRouter.get('/users', userController.readAll);
   securedRouter.get('/users/me', authController.getCurrentUser);
+
   securedRouter.get('/challenges', challengeController.getAll);
   securedRouter.get('/challenges/:id', challengeController.get);
   securedRouter.get('/challenges/:challenge/result', challengeController.getResult);

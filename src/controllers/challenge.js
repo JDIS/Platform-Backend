@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 const Result = require('mongoose').model('Result');
-const _ = require('lodash');
 
 const Category = require('../models/category');
 const Challenge = require('../models/challenge');
@@ -161,6 +160,21 @@ const get = async (ctx) => {
   ctx.body = challenge;
 };
 
+const getAll = async (ctx) => {
+  const user = ctx.state.user.id;
+  const result = await Result.findOne({ user });
+
+  // only show all challenges if the user completed a challenge (will be the tutorial)
+  if (result && result.points) {
+    ctx.body = await Challenge.find({});
+  } else {
+    const tutorielCategory = await Category.findOne({ name: 'Tutoriel' });
+    ctx.body = await Challenge.find({ category: tutorielCategory });
+  }
+
+  ctx.status = 200;
+};
+
 const update = async (ctx) => {
   const metadata = ctx.request.body;
 
@@ -182,19 +196,6 @@ const update = async (ctx) => {
 const remove = async (ctx) => {
   await Test.deleteMany({ challenge: ctx.params.id });
   await Challenge.findByIdAndDelete(ctx.params.id);
-  ctx.status = 200;
-};
-
-const getAll = async function (ctx) {
-  const cip = ctx.state.user.data.cip;
-  const result = await Result.findOne({ cip, challenge: 'tutoriel' });
-  if (result && result.points) {
-    ctx.body = { challenges };
-  } else {
-    const idx = _.findIndex(challenges, { name: 'tutoriel' });
-    ctx.body = { challenges: [challenges[idx]] };
-  }
-
   ctx.status = 200;
 };
 
@@ -224,13 +225,13 @@ const getResults = async function (ctx) {
 
 module.exports = {
   init,
-  getAll,
   getResult,
   getResults,
   list: challenges,
   // NEW API
   create,
   get,
+  getAll,
   remove,
   seed,
   update
