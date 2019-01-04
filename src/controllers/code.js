@@ -4,7 +4,7 @@ const Language = require('../models/language');
 const Result = require('../models/result');
 const Test = require('../models/test');
 const User = require('../models/user');
-const Tester = require('../challenges/tests/tester');
+const Tester = require('../services/tester/tester');
 const { writeFileAsync } = require('../utils');
 
 const saveCode = async (ctx) => {
@@ -31,6 +31,7 @@ const getChallengeCodes = async (ctx) => {
 
 const submit = async (ctx) => {
   const user = ctx.state.user.id;
+  const cip = ctx.state.user.cip;
   const code = ctx.request.body;
 
   // make sure we are using an allowed language
@@ -46,13 +47,13 @@ const submit = async (ctx) => {
 
   // prepare code file
   const language = await Language.findById(code.language);
-  const filename = `${user}_${code.challenge}_${Math.floor(new Date() / 1000)}${language.fileExtension}`;
+  const filename = `${cip}_${challenge.name}_${Math.floor(new Date() / 1000)}${language.fileExtension}`;
   await writeFileAsync(`${global.__basedir}/data/codes/${filename}`, code.code);
 
   // test code
   const tests = await Test.find({ challenge: code.challenge });
-  const tester = new Tester(filename, language);
-  tester.setTest(tests);
+  const tester = new Tester(filename, language, challenge);
+  tester.setTests(tests);
   const result = await tester.run();
 
   // save result

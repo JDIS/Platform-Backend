@@ -5,19 +5,24 @@ const logger = require('winston');
 const { genId, execFileAsync, head } = require('../../utils');
 
 class Tester {
-  constructor(filename, language) {
-    this.bin = language.bin;
+  constructor(filename, language, challenge) {
+    // Common
     this.dockerImage = language.dockerImage;
-    this.dockerCompiler = language.dockerCompiler;
-    this.compiledPostfix = language.compiledPostfix;
-    this.runPreArgs = language.runPreArgs.slice();
     this.interpreter = language.interpreter;
     this.filename = filename;
-    this.test = [];
+    this.timeAllowed = challenge.timeAllowed;
+    this.runPreArgs = language.runPreArgs.slice();
+
+    // specific
+    this.bin = language.bin || '';
+    this.dockerCompiler = language.dockerCompiler || '';
+    this.compiledPostfix = language.compiledPostfix || '';
+
+    this.tests = [];
   }
 
-  setTest(test) {
-    this.test = test;
+  setTests(tests) {
+    this.tests = tests;
   }
 
   verifyOutput(output, expected) {
@@ -57,8 +62,8 @@ class Tester {
     this.compImageName = genId();
     const args = [
       'run', '--rm', '-tid',
-      '-v', `${process.env.HOST_PWD}/src/challenges/codes/tmp:/tmp/output`,
-      '-v', `${process.env.HOST_PWD}/src/challenges/codes/${this.filename}:/tmp/${this.filename}`,
+      '-v', `${global.__basedir}/data/codes/tmp:/tmp/output`,
+      '-v', `${global.__basedir}/data/codes/${this.filename}:/tmp/${this.filename}`,
       '--name', this.compImageName,
       this.dockerCompiler
     ];
@@ -69,8 +74,8 @@ class Tester {
     this.testImageName = genId();
     const args = [
       'run', '--rm', '-tid',
-      '-v', `${process.env.HOST_PWD}/src/challenges/codes/${this.filename}:/tmp/${this.filename}`,
-      '-v', `${process.env.HOST_PWD}/src/challenges/codes/readline.js:/tmp/readline.js`,
+      '-v', `${global.__basedir}/data/codes/${this.filename}:/tmp/${this.filename}`,
+      '-v', `${__dirname}/readline.js:/tmp/readline.js`,
       '--name', this.testImageName,
       this.dockerImage
     ];
@@ -83,10 +88,10 @@ class Tester {
       this.compImageName, '/tmp/compile.sh', `${this.filename}`
     ];
     const err = () => {
-      const results = this.test.tests.map((test) => {
-        return { name: test.name, isSuccess: false, isTimeout: false, isCompilationError: true };
+      const results = this.tests.map((test) => {
+        return { test: test._id, isSuccess: false, isTimeout: false, isCompilationError: true };
       });
-      throw { results, percent: 0 };
+      throw { tests: results, percent: 0 };
     };
     const log = (res) => {
       logger.debug(this.filename);
@@ -109,9 +114,9 @@ class Tester {
   }
 
   doTests() {
-    const promises = this.test.tests.map((test) => {
+    const promises = this.tests.map((test) => {
       const options = {
-        timeout: this.test.timeAllowed * 1000,
+        timeout: this.timeAllowed * 1000,
         input: test.inputs.join(os.EOL),
         encoding: 'utf-8'
       };
@@ -136,11 +141,11 @@ class Tester {
         logger.debug(`stderr: ${head(res.stderr.trim())}`);
         logger.debug('-----------------------------------');
         const isSuccess = this.verifyOutput(res.stdout.replace(/\r/g, '').replace(/\n$/, '').split('\n'), test.outputs);
-        const isTimeout = res.killed;
+        const isTimeout = !!res.killed;
         if (isSuccess) { successCount++; }
-        return { name: test.name, isSuccess, isTimeout, isCompilationError: false };
+        return { test: test._id, isSuccess, isTimeout, isCompilationError: false };
       });
-      return { results, percent: successCount / this.test.tests.length };
+      return { tests: results, percent: successCount / this.tests.length };
     });
   }
 
