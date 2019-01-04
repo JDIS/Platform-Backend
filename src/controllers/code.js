@@ -31,7 +31,7 @@ const getChallengeCodes = async (ctx) => {
 
 const submit = async (ctx) => {
   const user = ctx.state.user.id;
-  const cip = ctx.state.user.cip;
+  const cip = ctx.state.user.data.cip;
   const code = ctx.request.body;
 
   // make sure we are using an allowed language
