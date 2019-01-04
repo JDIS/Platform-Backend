@@ -5,8 +5,9 @@ RUN curl -sSL https://get.docker.com/ | sh
 
 WORKDIR /app
 COPY package.json /app
-RUN npm install
+RUN npm install --production
 COPY . /app
 
 EXPOSE 3000
 ENV NODE_ENV prod
+ENTRYPOINT [ "npm", "start" ]
