@@ -5,6 +5,9 @@ const createAll = async (ctx) => {
   const challenge = ctx.request.body.challenge;
   const tests = ctx.request.body.tests;
 
+  // Verify if all tests are code or not
+  tests.every((t) => t.isCode === tests[0].isCode);
+
   for (const test of tests) {
     created.push(await Test.create({
       name: test.name,

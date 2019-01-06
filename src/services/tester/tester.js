@@ -1,4 +1,5 @@
 const os = require('os');
+const vm = require('vm');
 
 const logger = require('winston');
 
@@ -25,7 +26,7 @@ class Tester {
     this.tests = tests;
   }
 
-  verifyOutput(output, expected) {
+  verifyOutput(output, expected, code) {
     if (output.length !== expected.length) {
       return false;
     }
@@ -36,6 +37,19 @@ class Tester {
     }
 
     return true;
+  }
+
+  verifyOutputWithCode(output, expected, code) {
+    const sandbox = {
+      output,
+      expected
+    };
+    const script = new vm.Script(code);
+    const context = vm.createContext(sandbox);
+
+    script.runInContext(context);
+
+    return parseInt(context.percent, 10);
   }
 
   run() {
@@ -134,17 +148,38 @@ class Tester {
 
     return Promise.all(promises).then((resList) => {
       let successCount = 0;
+      let isCode = false;
       const results = resList.map(([res, test]) => {
         logger.debug(this.filename);
         logger.debug('-----------------------------------');
         logger.debug(`stdout: ${head(res.stdout.trim())}`);
         logger.debug(`stderr: ${head(res.stderr.trim())}`);
         logger.debug('-----------------------------------');
+
+        const output = test.isPublic ? res.stdout.trim() : undefined;
+        const error = test.isPublic ? res.stderr.trim() : undefined;
+
+        if (test.isCode) {
+          isCode = true;
+          const percent = this.verifyOutputWithCode(res.stdout.replace(/\r/g, '').replace(/\n$/, '').split('\n'), test.outputs, test.code);
+          const isSuccess = Math.floor(percent) === 1;
+          const isTimeout = !!res.killed;
+          return { test: test._id, percent, isSuccess, isTimeout, isCompilationError: false, output, error };
+        }
+
         const isSuccess = this.verifyOutput(res.stdout.replace(/\r/g, '').replace(/\n$/, '').split('\n'), test.outputs);
         const isTimeout = !!res.killed;
         if (isSuccess) { successCount++; }
-        return { test: test._id, isSuccess, isTimeout, isCompilationError: false };
+        return { test: test._id, isSuccess, isTimeout, isCompilationError: false, output, error };
       });
+
+      if (isCode) {
+        const percent = results.map((r) => r.percent).reduce((avg, value, _, { length }) => {
+          return avg + value / length;
+        }, 0);
+        return { tests: results, percent };
+      }
+
       return { tests: results, percent: successCount / this.tests.length };
     });
   }

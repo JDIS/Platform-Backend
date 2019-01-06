@@ -25,6 +25,8 @@ const ResultSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Test'
     },
+    output: String,
+    error: String,
     percent: { type: Number },
     isSuccess: { type: Boolean },
     isTimeout: { type: Boolean },
