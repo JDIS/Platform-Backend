@@ -7,21 +7,29 @@ const { readFileAsync, readdirAsync } = require('../utils');
 
 const seed = async (ctx) => {
   const added = [];
-  const categoriesFolders = await readdirAsync(`${global.__basedir}/seed/challenges`);
+  const categoriesFolders = await readdirAsync(`${global.__basedir}/seed/challenges`, { withFileTypes: true });
 
   // challenges are nested inside a category folder
   // we do not care about the names of the folder since the metadata of the challenge contain everything
   for (const categoryFolder of categoriesFolders) {
-    const challengesFolders = await readdirAsync(`${global.__basedir}/seed/challenges/${categoryFolder}`);
+    if (!categoryFolder.isDirectory()) {
+      continue;
+    }
+
+    const challengesFolders = await readdirAsync(`${global.__basedir}/seed/challenges/${categoryFolder.name}`, { withFileTypes: true });
 
     for (const challengeFolder of challengesFolders) {
+      if (!challengeFolder.isDirectory()) {
+        continue;
+      }
+
       // read challenge files
       const metadata = JSON.parse(await readFileAsync(
-        `${global.__basedir}/seed/challenges/${categoryFolder}/${challengeFolder}/challenge.json`,
+        `${global.__basedir}/seed/challenges/${categoryFolder.name}/${challengeFolder.name}/challenge.json`,
         { encoding: 'utf8' }
       ));
       const description = await readFileAsync(
-        `${global.__basedir}/seed/challenges/${categoryFolder}/${challengeFolder}/README.md`,
+        `${global.__basedir}/seed/challenges/${categoryFolder.name}/${challengeFolder.name}/README.md`,
         { encoding: 'utf8' }
       );
 
