@@ -47,7 +47,8 @@ const submit = async (ctx) => {
 
   // prepare code file
   const language = await Language.findById(code.language);
-  const filename = `${cip}_${challenge.name}_${Math.floor(new Date() / 1000)}${language.fileExtension}`;
+  const challengeName = challenge.name.replace(/\W+/g, '');
+  const filename = `${cip}_${challengeName}_${Math.floor(new Date() / 1000)}${language.fileExtension}`;
   await writeFileAsync(`${global.__basedir}/data/codes/${filename}`, code.code);
 
   // test code

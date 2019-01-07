@@ -75,5 +75,13 @@
     "dockerCompiler": "rust-compiler",
     "interpreter": false,
     "highlight": "rust"
+  },
+  {
+    "name": "Haskell",
+    "fileExtension": ".hs",
+    "dockerImage": "haskell:8.6.2",
+    "dockerCompiler": "haskell-compiler",
+    "interpreter": false,
+    "highlight": "haskell"
   }
 ]

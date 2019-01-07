@@ -24,6 +24,7 @@
     "C++": "#include <iostream>\n\nint main() {\n    std::cout << \"Pas compris!\" << std::endl;\n    return 0;\n}",
     "C#": "using System;\nnamespace Tutoriel\n{\n    class Tutoriel\n    {\n        static void Main()\n        {\n            Console.WriteLine(\"Pas compris!\");\n        }\n    }\n}",
     "Java 11": "public class Tutoriel {\n    public static void main(String[] args) {\n        System.out.println(\"Pas compris!\");\n    }\n}",
-    "Rust": "fn main() {\n    println!(\"Pas compris!\");\n}"
+    "Rust": "fn main() {\n    println!(\"Pas compris!\");\n}",
+    "Haskell": "main = putStrLn \"Pas compris!\""
   }
 }
