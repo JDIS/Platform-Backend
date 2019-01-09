@@ -83,5 +83,15 @@
     "dockerCompiler": "haskell-compiler",
     "interpreter": false,
     "highlight": "haskell"
+  },
+  {
+    "name": "F#",
+    "bin": "dotnet",
+    "fileExtension": ".fs",
+    "dockerImage": "microsoft/dotnet:2.2-sdk",
+    "dockerCompiler": "fsharp-compiler",
+    "compiledPostfix": "/app.dll",
+    "interpreter": false,
+    "highlight": "fsharp"
   }
 ]

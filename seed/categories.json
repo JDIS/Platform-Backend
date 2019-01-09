@@ -6,12 +6,30 @@
     "name": "Software Engineering"
   },
   {
-    "name": "Devops"
+    "name": "DevOps"
   },
   {
-    "name": "Artificial intelligence"
+    "name": "Artificial Intelligence"
   },
   {
-    "name": "Machine learning"
+    "name": "Machine Learning"
+  },
+  {
+    "name": "Web"
+  },
+  {
+    "name": "Compiler"
+  },
+  {
+    "name": "Cryptography"
+  },
+  {
+    "name": "Functional Programming"
+  },
+  {
+    "name": "Reverse Engineering"
+  },
+  {
+    "name": "Security"
   }
 ]
