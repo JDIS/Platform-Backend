@@ -12,7 +12,7 @@ const seed = async (ctx) => {
   // challenges are nested inside a category folder
   // we do not care about the names of the folder since the metadata of the challenge contain everything
   for (const categoryFolder of categoriesFolders) {
-    if (!categoryFolder.isDirectory()) {
+    if (!categoryFolder.isDirectory() || categoryFolder.name === '.git') {
       continue;
     }
 
@@ -42,13 +42,15 @@ const seed = async (ctx) => {
       const whitelist = await Language.getByNames(metadata.whitelist || []);
       const blacklist = await Language.getByNames(metadata.blacklist || []);
       const boilerplates = [];
-      for (const [languageName, code] of Object.entries(metadata.boilerplates)) {
-        const language = await Language.findOne({ name: languageName });
-        if (language) {
-          boilerplates.push({
-            language: language._id,
-            code
-          });
+      if (metadata.boilerplates) {
+        for (const [languageName, code] of Object.entries(metadata.boilerplates)) {
+          const language = await Language.findOne({ name: languageName });
+          if (language) {
+            boilerplates.push({
+              language: language._id,
+              code
+            });
+          }
         }
       }
       const challenge = await Challenge.create({
