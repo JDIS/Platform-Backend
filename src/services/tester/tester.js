@@ -20,6 +20,7 @@ class Tester {
     this.compiledPostfix = language.compiledPostfix || '';
 
     this.tests = [];
+    this.basePath = process.env.HOST_PWD || global.__basedir;
   }
 
   setTests(tests) {
@@ -76,8 +77,8 @@ class Tester {
     this.compImageName = genId();
     const args = [
       'run', '--rm', '-tid',
-      '-v', `${global.__basedir}/data/codes/tmp:/tmp/output`,
-      '-v', `${global.__basedir}/data/codes/${this.filename}:/tmp/${this.filename}`,
+      '-v', `${this.basePath}/data/codes/tmp:/tmp/output`,
+      '-v', `${this.basePath}/data/codes/${this.filename}:/tmp/${this.filename}`,
       '--name', this.compImageName,
       this.dockerCompiler
     ];
@@ -88,7 +89,7 @@ class Tester {
     this.testImageName = genId();
     const args = [
       'run', '--rm', '-tid',
-      '-v', `${global.__basedir}/data/codes/${this.filename}:/tmp/${this.filename}`,
+      '-v', `${this.basePath}/data/codes/${this.filename}:/tmp/${this.filename}`,
       '-v', `${__dirname}/readline.js:/tmp/readline.js`,
       '--name', this.testImageName,
       this.dockerImage
