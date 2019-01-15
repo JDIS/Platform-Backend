@@ -12,7 +12,7 @@ const saveCode = async (ctx) => {
   const newCode = ctx.request.body;
   newCode.user = user;
 
-  await User.update({ user }, { $set: { 'data.language': newCode.language } });
+  await User.update({ user }, { $set: { preferredLanguage: newCode.language } });
   await Code.save(newCode);
 
   ctx.status = 200;
@@ -31,7 +31,7 @@ const getChallengeCodes = async (ctx) => {
 
 const submit = async (ctx) => {
   const user = ctx.state.user.id;
-  const cip = ctx.state.user.data.cip;
+  const cip = ctx.state.user.cip;
   const code = ctx.request.body;
 
   // make sure we are using an allowed language

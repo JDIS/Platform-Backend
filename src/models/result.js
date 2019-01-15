@@ -37,7 +37,7 @@ const ResultSchema = new Schema({
 ResultSchema.index({ user: 1, challenge: 1 }, { unique: true });
 
 ResultSchema.statics.getUsersPoints = function () {
-  return this.aggregate().group([{
+  return this.aggregate([{
     $group: {
       _id: '$user',
       points: { $sum: '$points' } }

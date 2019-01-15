@@ -3,17 +3,16 @@ const Result = require('mongoose').model('Result');
 
 const readAll = async function (ctx) {
   const result = [];
-  const users = await User.find({}).sort('-meta.isAdmin data.cip');
+  const users = await User.find({});
   const usersObj = {};
   for (const user of users) {
-    usersObj[user.data.cip] = user;
+    usersObj[user._id] = user;
   }
 
   const points = await Result.getUsersPoints();
   for (const point of points) {
     if (usersObj[point._id]) {
-      usersObj[point._id].data.totalPoints = point.points;
-      result.push(usersObj[point._id]);
+      result.push({ totalPoints: point.points, ...usersObj[point._id].toJSON() });
     }
   }
 
