@@ -34,7 +34,7 @@ module.exports = function (app, passport) {
 
   // secured routes
   securedRouter.use(accessRights.isConnected);
-  securedRouter.get('/users', userController.readAll);
+  securedRouter.get('/users', userController.getAll);
   securedRouter.get('/users/me', authController.getCurrentUser);
 
   securedRouter.get('/challenges', challengeController.getAll);

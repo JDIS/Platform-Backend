@@ -1,7 +1,7 @@
 const User = require('mongoose').model('User');
 const Result = require('mongoose').model('Result');
 
-const readAll = async function (ctx) {
+const getAll = async function (ctx) {
   const result = [];
   const users = await User.find({});
   const usersObj = {};
@@ -32,6 +32,6 @@ const makeAdmin = async function (ctx) {
 };
 
 module.exports = {
-  readAll,
+  getAll,
   makeAdmin
 };

@@ -234,6 +234,18 @@ paths:
         200:
           description: OK
   # USERS
+  /users:
+     get:
+      summary: Get the all users
+      tags:
+        - users
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
   /users/me:
     get:
       summary: Get the current user
@@ -390,28 +402,19 @@ definitions:
       id:
         type: string
         readOnly: true
-      data:
-        type: object
-        properties:
-          cip:
-            type: string
-          language:
-            type: string
-          email:
-            type: string
-          name:
-            type: string
-          totalPoints:
-            type: integer
-      meta:
-        type: object
-        properties:
-          provider:
-            type: string
-          isAdmin:
-            type: boolean
-          created:
-            type: string
+      cip:
+        type: string
+      language:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      totalPoints:
+        type: integer
+        readOnly: true
+      isAdmin:
+        type: boolean
   Result:
     type: object
     properties:
