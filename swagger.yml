@@ -274,7 +274,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Challenge"
+              $ref: "#/definitions/Result"
   # CODES
   /codes:
     get:
@@ -340,6 +340,8 @@ definitions:
         type: boolean
       timeAllowed:
         type: integer
+      numberTests:
+        type: integer
       languagesAllowed:
         type: array
         items:
@@ -375,6 +377,8 @@ definitions:
         type: array
         items:
           type: string
+      code:
+        type: string
   Category:
     type: object
     properties:
@@ -397,6 +401,8 @@ definitions:
             type: string
           name:
             type: string
+          totalPoints:
+            type: integer
       meta:
         type: object
         properties:
@@ -426,6 +432,10 @@ definitions:
           type: object
           properties:
             test:
+              type: string
+            output:
+              type: string
+            error:
               type: string
             percent:
               type: number

@@ -27,6 +27,7 @@ const ChallengeSchema = new Schema({
     type: Number,
     required: true
   },
+  numberTests: Number,
   languagesAllowed: {
     blacklist: [{
       type: Schema.Types.ObjectId,

@@ -19,6 +19,8 @@ require('./config/koa')(app, passport);
 
 require('./src/routes')(app, passport);
 
+require('./config/migrations')();
+
 app.listen(config.app.port, '0.0.0.0', function () {
   logger.info('Server started, listening on port:', config.app.port);
   logger.info(`Environment: ${config.app.env}`);
