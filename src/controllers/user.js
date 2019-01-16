@@ -16,7 +16,7 @@ const getAll = async function (ctx) {
     }
   }
 
-  ctx.body = { users: result };
+  ctx.body = result;
 };
 
 const makeAdmin = async function (ctx) {
