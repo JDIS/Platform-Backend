@@ -64,7 +64,8 @@ const seed = async (ctx) => {
           blacklist,
           whitelist
         },
-        boilerplates
+        boilerplates,
+        numberTests: metadata.tests.length
       });
 
       // create the tests

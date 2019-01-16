@@ -1,4 +1,5 @@
 const Test = require('../models/test');
+const Challenge = require('../models/challenge');
 
 const createAll = async (ctx) => {
   const created = [];
@@ -19,6 +20,8 @@ const createAll = async (ctx) => {
       code: test.code
     }));
   }
+
+  await Challenge.update({ _id: challenge }, { $set: { numberTests: tests.length } });
 
   ctx.status = 200;
   ctx.body = created;
@@ -46,6 +49,8 @@ const updateAll = async (ctx) => {
       code: test.code
     }));
   }
+
+  await Challenge.update({ _id: challenge }, { $set: { numberTests: tests.length } });
 
   ctx.status = 200;
   ctx.body = updated;
