@@ -404,7 +404,7 @@ definitions:
         readOnly: true
       cip:
         type: string
-      language:
+      preferredLanguage:
         type: string
       email:
         type: string
