@@ -34,11 +34,11 @@ const submit = async (ctx) => {
   const cip = ctx.state.user.cip;
   const code = ctx.request.body;
 
-  // make sure we are using an allowed language
+  // make sure we are using an allowed language (compare ObjectID with String)
   const challenge = await Challenge.findById(code.challenge);
   const { blacklist, whitelist } = challenge.languagesAllowed;
-  if ((blacklist.length && blacklist.includes(code.language)) ||
-     (whitelist.length && !whitelist.includes(code.language))) {
+  if ((blacklist.length && blacklist.some((o) => o == code.language)) || // eslint-disable-line eqeqeq
+     (whitelist.length && !whitelist.some((o) => o == code.language))) { // eslint-disable-line eqeqeq
     ctx.throw(403, 'Language not allowed');
   }
 
