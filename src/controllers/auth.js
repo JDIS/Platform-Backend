@@ -1,6 +1,6 @@
 exports.getCurrentUser = function (ctx) {
   if (ctx.state.user) {
-    ctx.body = { user: ctx.state.user };
+    ctx.body = ctx.state.user;
   }
   ctx.status = 200;
 };
