@@ -40,6 +40,7 @@ module.exports = function (app, passport) {
   securedRouter.get('/challenges', challengeController.getAll);
   securedRouter.get('/challenges/:id', challengeController.get);
   securedRouter.get('/challenges/:id/result', resultController.get);
+  securedRouter.get('/challenges/:id/tests', testController.getAll);
   securedRouter.get('/results', resultController.getAll);
 
   securedRouter.get('/codes', codeController.getChallengeCodes);
@@ -61,7 +62,6 @@ module.exports = function (app, passport) {
   adminRouter.post('/challenges', challengeController.create);
   adminRouter.put('/challenges/:id', challengeController.update);
   adminRouter.delete('/challenges/:id', challengeController.remove);
-  adminRouter.get('/challenges/:id/tests', testController.getAll);
   adminRouter.post('/challenges/:id/tests', testController.createAll);
   adminRouter.put('/challenges/:id/tests', testController.updateAll);
 };

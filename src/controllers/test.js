@@ -28,8 +28,22 @@ const createAll = async (ctx) => {
 };
 
 const getAll = async (ctx) => {
-  const tests = await Test.find({ challenge: ctx.params.id });
-  ctx.status = 200;
+  let tests = [];
+
+  if (ctx.state.user.isAdmin) {
+    tests = await Test.find({ challenge: ctx.params.id });
+  } else {
+    tests = await Test
+      .find({ challenge: ctx.params.id })
+      .then((tests) => tests.map((t) => {
+        return {
+          id: t._id,
+          name: t.name,
+          isPublic: t.isPublic
+        };
+      }));
+  }
+
   ctx.body = tests;
 };
 
