@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const logger = require('winston');
+const cachegoose = require('cachegoose');
 const mongoose = require('mongoose');
 
 module.exports = function (config) {
@@ -10,6 +11,11 @@ module.exports = function (config) {
 
   mongoose.connection.on('error', function (err) {
     logger.error('Error Mongo:', err);
+  });
+
+  cachegoose(mongoose, {
+    engine: 'redis',
+    url: config.redis.url
   });
 
   // TODO: remove and move to direct imports

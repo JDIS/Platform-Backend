@@ -333,6 +333,39 @@ paths:
       responses:
           200:
             description: OK
+  # SETTINGS
+  /settings/submit/activate:
+    post:
+        summary: Activate submit
+        tags:
+            - settings
+        responses:
+          200:
+            description: OK
+  /settings/submit/deactivate:
+    post:
+        summary: Deactivate submit
+        tags:
+            - settings
+        responses:
+          200:
+            description: OK
+  /settings/challenges/activate:
+    post:
+        summary: Activate challenges
+        tags:
+            - settings
+        responses:
+          200:
+            description: OK
+  /settings/challenges/deactivate:
+    post:
+        summary: Deactivate challenges
+        tags:
+            - settings
+        responses:
+          200:
+            description: OK
 definitions:
   Challenge:
     type: object

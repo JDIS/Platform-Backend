@@ -8,6 +8,7 @@ const challengeController = require('./controllers/challenge');
 const codeController = require('./controllers/code');
 const languageController = require('./controllers/language');
 const resultController = require('./controllers/result');
+const settingsController = require('./controllers/settings');
 const testController = require('./controllers/test');
 const userController = require('./controllers/user');
 
@@ -64,4 +65,9 @@ module.exports = function (app, passport) {
   adminRouter.delete('/challenges/:id', challengeController.remove);
   adminRouter.post('/challenges/:id/tests', testController.createAll);
   adminRouter.put('/challenges/:id/tests', testController.updateAll);
+
+  adminRouter.post('/settings/submit/activate', settingsController.activateSubmit);
+  adminRouter.post('/settings/submit/deactivate', settingsController.deactivateSubmit);
+  adminRouter.post('/settings/challenges/activate', settingsController.showChallenges);
+  adminRouter.post('/settings/challenges/deactivate', settingsController.hideChallenges);
 };

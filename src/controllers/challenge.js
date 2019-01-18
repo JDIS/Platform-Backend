@@ -2,6 +2,7 @@ const Category = require('../models/category');
 const Challenge = require('../models/challenge');
 const Language = require('../models/language');
 const Result = require('../models/result');
+const Settings = require('../models/settings');
 const Test = require('../models/test');
 const { readFileAsync, readdirAsync } = require('../utils');
 
@@ -115,6 +116,11 @@ const create = async (ctx) => {
 };
 
 const get = async (ctx) => {
+  const settings = await Settings.get();
+  if (!settings.showChallenges) {
+    ctx.throw(403, 'Challenges are deactivated');
+  }
+
   const challenge = await Challenge.findById(ctx.params.id);
   if (!challenge) {
     ctx.throw(404, 'Challenge does not exists');
@@ -124,6 +130,11 @@ const get = async (ctx) => {
 };
 
 const getAll = async (ctx) => {
+  const settings = await Settings.get();
+  if (!settings.showChallenges) {
+    ctx.throw(403, 'Challenges are deactivated');
+  }
+
   const user = ctx.state.user.id;
   const result = await Result.findOne({ user });
 

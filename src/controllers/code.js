@@ -2,6 +2,7 @@ const Challenge = require('../models/challenge');
 const Code = require('../models/code');
 const Language = require('../models/language');
 const Result = require('../models/result');
+const Settings = require('../models/settings');
 const Test = require('../models/test');
 const User = require('../models/user');
 const Tester = require('../services/tester/tester');
@@ -30,6 +31,11 @@ const getChallengeCodes = async (ctx) => {
 };
 
 const submit = async (ctx) => {
+  const settings = await Settings.get();
+  if (!settings.submitActivated) {
+    ctx.throw(403, 'Submit is deactivated');
+  }
+
   const user = ctx.state.user.id;
   const cip = ctx.state.user.cip;
   const code = ctx.request.body;
