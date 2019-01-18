@@ -2,7 +2,7 @@
   "name": "Good luck!",
   "category": "Tutoriel",
   "isCodingChallenge": true,
-  "points": 1,
+  "points": 50,
   "tests": [
     {
       "inputs": [],
