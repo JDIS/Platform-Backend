@@ -45,12 +45,17 @@ class Tester {
       output,
       expected
     };
-    const script = new vm.Script(code);
-    const context = vm.createContext(sandbox);
+    try {
+      const script = new vm.Script(code);
+      const context = vm.createContext(sandbox);
 
-    script.runInContext(context);
+      script.runInContext(context);
 
-    return parseInt(context.percent, 10) || 0;
+      return parseFloat(context.percent) || 0;
+    } catch (err) {
+      logger.error(`Something went wrong: ${err.message}`);
+      return 0;
+    }
   }
 
   run() {
