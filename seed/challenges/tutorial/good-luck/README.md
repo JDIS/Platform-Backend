@@ -3,10 +3,10 @@
 Bienvenue aux sélections des CS Games. Dans cette compétition, vous aurez à résoudre quelques défis en utilisant les langages de programmation disponibles sur cette plateforme.
 
 Voici quelques suggestions :
-  - [Python 2.7](https://www.python.org/downloads/release/python-2714/)
-  - [Python 3.6](https://www.python.org/downloads/release/python-364/)
-  - [JavaScript (Node.js v9.3.0)](https://nodejs.org/en/blog/release/v9.3.0/)
-  - [Ruby (2.5.0)](https://www.ruby-lang.org/en/news/2017/12/25/ruby-2-5-0-released/)
+  - [Python 2.7](https://www.python.org/downloads/release/python-2715/)
+  - [Python 3.6](https://www.python.org/downloads/release/python-368/)
+  - [JavaScript (Node.js v10.15.0)](https://nodejs.org/en/blog/release/v10.15.0/)
+  - [Ruby (2.6.0)](https://www.ruby-lang.org/en/news/2018/12/25/ruby-2-6-0-released/)
 
 ## Le but
 Votre but est de résoudre le plus de défis possibles pour obtenir un maximum de «force».
@@ -17,10 +17,16 @@ Chaque challenge offre un nombre de force différent selon la difficulté du dé
 ## Comment ça marche?
 Les défis de programmation sont de type _stdin_/_stdout_. Autrement dit, vous lirez les entrées fournies sur l'entrée standard de la console (_stdin_), et vous enverrez les résultats de vos algorithmes sur la sortie standard (_stdout_).
 
-## Pour tester localement (**extrêmement utile**)
-Vous avez accès à un script utilitaire qui agit exactement comme la plateforme, mais localement : le [Validator](https://github.com/JDIS/CSGamesSelectionPublic/tree/master/Validator) vous permet ainsi de tester les défis que vous voulez localement. Pour ce faire, vous devez lui fournir un script et fichier de test comme [celui-ci](https://github.com/JDIS/CSGamesSelectionPublic/blob/master/Tutoriel/tutoriel.json).
+## Comment savoir si le résultat est bon?
+Chaque challenge possède plusieurs tests qui sont affichés en bas de la description:
 
-Tous les fichiers nécessaires sont disponibles sur le [dépôt GitHub public de cet événement](https://github.com/JDIS/CSGamesSelectionPublic).
+![alt text](https://user-images.githubusercontent.com/2366731/51412791-d6f5d900-1b3a-11e9-8380-2f25ce355dd7.png "Tests")
+
+En cliquant sur un test, vous obtiendrez les détails à droite:
+
+![alt text](https://user-images.githubusercontent.com/2366731/51412901-250adc80-1b3b-11e9-99bb-357ab62a846b.png "Tests")
+
+Vous avez accès au _stderr_ et _stdout_ des tests publiques.
 
 ### stdin
 **Python**
