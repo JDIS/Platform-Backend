@@ -46,6 +46,21 @@ ResultSchema.statics.getUsersPoints = function () {
   }]);
 };
 
+ResultSchema.statics.getUserPoints = async function (user) {
+  const result = await this.aggregate([{
+    $match: {
+      user: new mongoose.Types.ObjectId(user)
+    }
+  }, {
+    $group: {
+      _id: '$user',
+      points: { $sum: '$points' }
+    }
+  }]);
+
+  return (result.length && result[0].points) || 0;
+};
+
 ResultSchema.statics.save = function (result) {
   return this.update({ user: result.user, challenge: result.challenge }, result, { upsert: true });
 };

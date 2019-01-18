@@ -50,7 +50,7 @@ class Tester {
 
     script.runInContext(context);
 
-    return parseInt(context.percent, 10);
+    return parseInt(context.percent, 10) || 0;
   }
 
   run() {

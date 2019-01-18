@@ -136,10 +136,10 @@ const getAll = async (ctx) => {
   }
 
   const user = ctx.state.user.id;
-  const result = await Result.findOne({ user });
+  const points = await Result.getUserPoints(user);
 
   // only show all challenges if the user completed a challenge (will be the tutorial)
-  if (result && result.points) {
+  if (points > 0) {
     ctx.body = await Challenge.find({});
   } else {
     const tutorielCategory = await Category.findOne({ name: 'Tutoriel' });

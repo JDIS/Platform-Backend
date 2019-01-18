@@ -1,9 +1,11 @@
 const winston = require('winston');
 
 module.exports = function (app) {
+  const level = process.env.NODE_ENV === 'dev' ? 'debug' : 'info';
+
   // Add console transport with nice format
   winston.add(new winston.transports.Console({
-    level: 'debug',
+    level,
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.timestamp(),
