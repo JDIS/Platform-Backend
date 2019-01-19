@@ -15,7 +15,8 @@ module.exports = function (config) {
 
   cachegoose(mongoose, {
     engine: 'redis',
-    url: config.redis.url
+    host: config.redis.host,
+    port: config.redis.port
   });
 
   // TODO: remove and move to direct imports

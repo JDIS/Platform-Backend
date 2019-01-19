@@ -40,7 +40,8 @@ module.exports = function (app, passport) {
   // Session management
   app.use(session({
     store: redisStore({
-      url: config.redis.url
+      host: config.redis.host,
+      port: config.redis.port
     })
   }, app));
   app.use(bodyParser());

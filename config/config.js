@@ -23,7 +23,8 @@ const specific = {
       url: 'mongodb://localhost/csgamesplatform_dev'
     },
     redis: {
-      url: 'redis://localhost/'
+      port: 6379,
+      host: 'localhost'
     }
   },
   test: {
@@ -36,7 +37,8 @@ const specific = {
       url: 'mongodb://localhost/csgamesplatform_test'
     },
     redis: {
-      url: 'redis://localhost/'
+      port: 6379,
+      host: 'localhost'
     }
   },
   prod: {
@@ -50,7 +52,8 @@ const specific = {
       url: 'mongodb://database/csgamesplatform' // Running in docker
     },
     redis: {
-      url: 'redis://cache/'
+      port: 6379,
+      host: 'cache'
     }
   }
 };
