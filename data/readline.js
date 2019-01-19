@@ -5,7 +5,7 @@ const fs = require('fs');
 const os = require('os');
 
 const BUFSIZ = 65536;
-let buf = new Buffer(BUFSIZ);
+let buf = Buffer.alloc(BUFSIZ);
 buf.fill('\x00');
 let response = [''];
 try {

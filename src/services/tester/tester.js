@@ -95,7 +95,7 @@ class Tester {
     const args = [
       'run', '--rm', '-tid',
       '-v', `${this.basePath}/data/codes/${this.filename}:/tmp/${this.filename}`,
-      '-v', `${__dirname}/readline.js:/tmp/readline.js`,
+      '-v', `${this.basePath}/data/readline.js:/tmp/readline.js`,
       '--name', this.testImageName,
       this.dockerImage
     ];
