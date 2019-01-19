@@ -21,7 +21,7 @@ const CodeSchema = new Schema({
   }
 });
 
-CodeSchema.index({ cip: 1, challenge: 1, language: 1 }, { unique: true });
+CodeSchema.index({ user: 1, challenge: 1, language: 1 }, { unique: true });
 
 CodeSchema.statics.save = function (code) {
   return this.update({ user: code.user, challenge: code.challenge, language: code.language }, code, { upsert: true });
