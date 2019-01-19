@@ -69,7 +69,7 @@ class Tester {
     return promise.then((x) => this.prepareTests(x))
       .then((x) => this.doTests(x))
       .catch((err) => {
-        if (err.results) {
+        if (err.tests) {
           return err;
         }
         // TODO: add logging console.log(err);
@@ -107,9 +107,10 @@ class Tester {
       'exec', '-i',
       this.compImageName, '/tmp/compile.sh', `${this.filename}`
     ];
-    const err = () => {
+    const err = (stderr) => {
       const results = this.tests.map((test) => {
-        return { test: test._id, isSuccess: false, isTimeout: false, isCompilationError: true };
+        const error = test.isPublic ? stderr.trim() : undefined;
+        return { test: test._id, isSuccess: false, isTimeout: false, isCompilationError: true, error };
       });
       throw { tests: results, percent: 0 };
     };
@@ -125,11 +126,11 @@ class Tester {
       this.filename = `tmp/${this.filename.split('.')[0]}`;
 
       if (res.stderr.byteLength > 0) {
-        err();
+        err(res.stderr);
       }
     }).catch((e) => {
       log(e);
-      err();
+      err(e.stderr);
     });
   }
 
